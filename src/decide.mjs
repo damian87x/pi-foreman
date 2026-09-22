@@ -105,8 +105,9 @@ export async function handle(input = {}) {
   const deadline = new Error('deadline');
   let body;
   try {
+    const waitMs = Number.isFinite(dto.deadlineMs) && dto.deadlineMs > 0 ? dto.deadlineMs : HANDLE_DEADLINE_MS;
     body = await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(deadline), HANDLE_DEADLINE_MS);
+      const timer = setTimeout(() => reject(deadline), waitMs);
       Promise.resolve(response).then(
         (value) => { clearTimeout(timer); resolve(value); },
         (error) => { clearTimeout(timer); reject(error); },

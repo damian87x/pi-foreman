@@ -1,16 +1,18 @@
 # pi-foreman
 
-Offline shadow decision kernel for a Pi supervisor. It scores one batched yes/no fixture and returns a would-be decision. It does not act.
+Shadow decision kernel. It can call TypeSafe Jev and still does not act.
 
-## Not Jev
+## Live check
 
-This has not been tested against TypeSafe Jev. It is not a Jev client.
+Set `TYPESAFE_API_KEY`, or put it in `~/.pi/agent/secrets/typesafe_api_key`. Then:
 
-Jev/Nimble sends id-keyed questions and reads `answers[id].noul`. This module expects `{id, text}` questions and `{id, p}` answers. A real Jev body is rejected as malformed.
+```bash
+PI_FOREMAN_LIVE=1 node --test --test-timeout=12000 test/live-jev.test.mjs
+```
 
-No network. No API key. `acted` is always false.
+One live call against `jev-1.13.0` passed on 2026-09-22. The kernel maps `answers[id].noul` into its scorer. `acted` stays false. The key is never logged.
 
-## Test
+Offline tests do not use the network:
 
 ```bash
 node --test --test-timeout=5000 test/ac-*.test.mjs
